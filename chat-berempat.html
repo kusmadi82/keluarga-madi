@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Keluarga Madi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/tim-js-sdk@2.27.6/tim-js.js"></script>
+<style>
+  :root{
+    --bg:#edf1ef;
+    --surface:#ffffff;
+    --surface-2:#f4f7f5;
+    --ink:#13211e;
+    --ink-2:#43534f;
+    --muted:#71827d;
+    --line:#d9e1dd;
+    --accent:#0c6b62;
+    --accent-hover:#095950;
+    --accent-soft:#dff0ec;
+    --bubble-own:#0c6b62;
+    --bubble-own-ink:#ffffff;
+    --bubble-other:#ffffff;
+    --danger:#b42318;
+    --danger-bg:#fef3f2;
+    --ok:#067647;
+    --shadow:0 12px 32px rgba(19,33,30,.10);
+    --radius:16px;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0c1211;
+      --surface:#151e1c;
+      --surface-2:#1a2522;
+      --ink:#e9f1ef;
+      --ink-2:#b9c8c4;
+      --muted:#8aa09a;
+      --line:#263431;
+      --accent:#2fbfae;
+      --accent-hover:#4ad2c2;
+      --accent-soft:#173a35;
+      --bubble-own:#0f766e;
+      --bubble-own-ink:#ffffff;
+      --bubble-other:#1c2926;
+      --danger:#fda29b;
+      --danger-bg:#2a1715;
+      --ok:#32d583;
+      --shadow:0 12px 32px rgba(0,0,0,.35);
+      color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---------- Login ---------- */
+  .login-wrap{
+    min-height:100dvh;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px 16px 32px;
+  }
+  .login-card{
+    width:100%;max-width:430px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:28px 24px 24px;
+  }
+  .login-mark{
+    width:52px;height:52px;border-radius:14px;
+    background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+  .login-card h1{font-size:26px;line-height:1.15;margin:0 0 8px;font-weight:800;letter-spacing:-.02em}
+  .login-card .lead{margin:0 0 20px;color:var(--ink-2);font-size:15px;line-height:1.55}
+  .members-line{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+  .member-chip{
+    display:inline-flex;align-items:center;gap:7px;
+    border:1px solid var(--line);background:var(--surface-2);
+    border-radius:999px;padding:6px 12px 6px 6px;
+    font-size:13px;font-weight:600;color:var(--ink-2);
+  }
+  .avatar{
+    width:28px;height:28px;border-radius:50%;flex:none;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;color:#fff;letter-spacing:.01em;
+  }
+  .av-madi{background:#7c3aed}.av-maya{background:#0c6b62}.av-tia{background:#b45309}.av-mia{background:#be3455}.av-ria{background:#2563eb}
+  .av-lain{background:#667085}
+  label.field{display:block;margin-bottom:16px}
+  label.field span.lbl{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+  label.field span.hint{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45;font-weight:400}
+  .input, textarea.input{
+    width:100%;border:1px solid var(--line);border-radius:12px;
+    background:var(--surface);color:var(--ink);
+    padding:12px 14px;font-size:15px;min-height:48px;
+  }
+  textarea.input{min-height:84px;resize:vertical;line-height:1.45;font-size:13.5px;word-break:break-all}
+  .input[readonly]{background:var(--surface-2);color:var(--ink-2)}
+  .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin:-4px 0 16px}
+  .quick-btn{
+    min-height:40px;padding:8px 16px;border-radius:999px;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    font-weight:700;font-size:14px;
+  }
+  .quick-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .sig-row{position:relative}
+  .sig-toggle{
+    position:absolute;right:6px;top:6px;min-height:36px;padding:6px 10px;
+    border:0;border-radius:8px;background:var(--surface-2);color:var(--accent);
+    font-size:13px;font-weight:700;
+  }
+  .btn-primary{
+    width:100%;min-height:52px;border:0;border-radius:12px;
+    background:var(--accent);color:#fff;font-weight:800;font-size:16px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .btn-primary:hover{background:var(--accent-hover)}
+  .btn-primary:disabled{opacity:.55;cursor:not-allowed}
+  .alert{
+    display:none;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5;margin-bottom:16px;
+  }
+  .alert.show{display:block}
+  .alert.error{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger)}
+  .login-note{margin:16px 0 0;font-size:12.5px;color:var(--muted);line-height:1.55}
+  .spinner{
+    width:18px;height:18px;border-radius:50%;flex:none;
+    border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
+    animation:spin .7s linear infinite;
+  }
+  .spinner.dark{border-color:var(--line);border-top-color:var(--accent)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){.spinner{animation-duration:2s}}
+
+  /* ---------- Chat ---------- */
+  .chat-wrap{display:none;height:100dvh;flex-direction:column;max-width:860px;margin:0 auto;background:var(--surface);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .chat-wrap.on{display:flex}
+  .chat-header{
+    flex:none;display:flex;align-items:center;gap:12px;
+    padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface);
+  }
+  .group-avatar{
+    width:44px;height:44px;border-radius:13px;flex:none;
+    background:var(--accent);color:#fff;font-weight:800;font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .chat-header .titles{min-width:0;flex:1}
+  .chat-header h2{margin:0;font-size:17px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .status-line{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);margin-top:2px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#98a2b3;flex:none}
+  .dot.on{background:var(--ok)}
+  .dot.busy{background:#f79009}
+  .btn-ghost{
+    min-height:44px;padding:8px 14px;border-radius:10px;flex:none;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    font-weight:700;font-size:14px;
+  }
+  .btn-ghost:hover{background:var(--surface-2)}
+  .banner{
+    display:none;flex:none;padding:10px 16px;font-size:13.5px;line-height:1.5;
+    background:var(--danger-bg);color:var(--danger);border-bottom:1px solid var(--line);
+  }
+  .banner.show{display:block}
+  .load-older{
+    display:none;flex:none;margin:12px auto 0;padding:8px 18px;min-height:40px;
+    border-radius:999px;border:1px solid var(--line);background:var(--surface);
+    font-weight:700;font-size:13.5px;color:var(--accent);
+    box-shadow:0 2px 8px rgba(19,33,30,.06);
+  }
+  .load-older.show{display:block}
+  .messages{
+    flex:1;overflow-y:auto;overscroll-behavior:contain;
+    padding:8px 16px 16px;background:var(--surface-2);
+    display:flex;flex-direction:column;
+  }
+  .day-sep{
+    align-self:center;margin:14px 0 6px;padding:4px 12px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--line);
+    font-size:12px;font-weight:700;color:var(--muted);
+  }
+  .msg{display:flex;gap:9px;margin-top:14px;max-width:100%}
+  .msg .avatar{width:34px;height:34px;font-size:13px;margin-top:2px}
+  .msg .body{min-width:0;max-width:78%}
+  .msg .sender{font-size:12.5px;font-weight:800;margin:0 0 4px;color:var(--ink-2)}
+  .bubble{
+    padding:10px 13px;border-radius:4px 16px 16px 16px;
+    background:var(--bubble-other);border:1px solid var(--line);
+    font-size:15px;line-height:1.55;white-space:pre-wrap;word-break:break-word;
+  }
+  .bubble a{color:var(--accent);word-break:break-all}
+  .msg .time{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .msg.own{flex-direction:row-reverse}
+  .msg.own .body{display:flex;flex-direction:column;align-items:flex-end}
+  .msg.own .bubble{background:var(--bubble-own);color:var(--bubble-own-ink);border-color:transparent;border-radius:16px 4px 16px 16px}
+  .msg.own .bubble a{color:#bff3ea}
+  .msg.own .time{text-align:right}
+  .msg.sys{align-self:center;max-width:88%}
+  .msg.sys .sys-text{
+    font-size:12.5px;color:var(--muted);background:var(--surface);
+    border:1px solid var(--line);border-radius:999px;padding:5px 13px;text-align:center;line-height:1.45;
+  }
+  .msg.failed .bubble{border-color:var(--danger)}
+  .msg .fail-note{font-size:12px;color:var(--danger);margin-top:4px;font-weight:600}
+  .empty-state{
+    margin:auto;text-align:center;color:var(--muted);max-width:300px;padding:24px 0;
+  }
+  .empty-state strong{display:block;color:var(--ink-2);font-size:16px;margin-bottom:6px}
+  .empty-state p{margin:0;font-size:14px;line-height:1.55}
+  .loading-history{display:flex;align-items:center;gap:10px;justify-content:center;padding:28px 0;color:var(--muted);font-size:14px}
+
+  .composer{
+    flex:none;display:flex;gap:10px;align-items:flex-end;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-top:1px solid var(--line);background:var(--surface);
+  }
+  .composer textarea{
+    flex:1;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);
+    color:var(--ink);padding:12px 14px;font-size:15px;line-height:1.45;
+    min-height:48px;max-height:130px;resize:none;
+  }
+  .btn-send{
+    width:48px;height:48px;flex:none;border:0;border-radius:14px;
+    background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .btn-send:hover{background:var(--accent-hover)}
+  .btn-send:disabled{opacity:.45;cursor:not-allowed}
+  .me-line{
+    flex:none;padding:7px 16px;font-size:12.5px;color:var(--muted);
+    background:var(--surface);border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  @media (max-width:520px){
+    .login-card{padding:24px 18px 20px;border-radius:18px}
+    .msg .body{max-width:82%}
+    .messages{padding-left:12px;padding-right:12px}
+    .composer{padding-left:12px;padding-right:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<main class="login-wrap" id="loginView">
+  <section class="login-card" aria-labelledby="loginTitle">
+    <div class="login-mark" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    </div>
+    <h1 id="loginTitle">Keluarga Madi</h1>
+    <p class="lead">Ruang ngobrol keluarga — Madi, Maya, Tia, Mia, dan Ria. Masuk pakai UserID dan UserSig kamu sendiri.</p>
+
+    <div class="members-line" aria-label="Anggota grup">
+      <span class="member-chip"><span class="avatar av-madi">M</span>Madi</span>
+      <span class="member-chip"><span class="avatar av-maya">M</span>Maya</span>
+      <span class="member-chip"><span class="avatar av-tia">T</span>Tia</span>
+      <span class="member-chip"><span class="avatar av-mia">M</span>Mia</span>
+      <span class="member-chip"><span class="avatar av-ria">R</span>Ria</span>
+    </div>
+
+    <div class="alert error" id="loginError" role="alert"></div>
+    <div class="alert" id="loginInfo" style="background:var(--accent-soft);color:var(--ink-2)" role="status"></div>
+
+    <form id="loginForm" autocomplete="off" novalidate>
+      <label class="field">
+        <span class="lbl">SDKAppID</span>
+        <input class="input" id="sdkAppId" type="text" value="20050801" readonly tabindex="-1" />
+      </label>
+
+      <span class="lbl" style="display:block;font-size:13px;font-weight:700;margin-bottom:7px">Kamu siapa?</span>
+      <div class="quick-row" role="group" aria-label="Pilih UserID cepat">
+        <button type="button" class="quick-btn" data-userid="madi">Madi</button>
+        <button type="button" class="quick-btn" data-userid="maya">Maya</button>
+        <button type="button" class="quick-btn" data-userid="tia">Tia</button>
+        <button type="button" class="quick-btn" data-userid="mia">Mia</button>
+        <button type="button" class="quick-btn" data-userid="ria">Ria</button>
+      </div>
+
+      <label class="field">
+        <span class="lbl">UserID</span>
+        <input class="input" id="userId" type="text" placeholder="mis. maya" autocapitalize="none" autocorrect="off" spellcheck="false" required />
+      </label>
+
+      <label class="field">
+        <span class="lbl">UserSig</span>
+        <span class="sig-row" style="display:block">
+          <textarea class="input" id="userSig" placeholder="Tempel UserSig kamu di sini" autocapitalize="none" autocorrect="off" spellcheck="false" required style="padding-right:86px"></textarea>
+          <button type="button" class="sig-toggle" id="sigToggle">Lihat</button>
+        </span>
+        <span class="hint">UserSig itu kunci login pribadi — jangan dibagikan ke siapa pun. Tempel yang punya kamu sendiri.</span>
+      </label>
+
+      <button type="submit" class="btn-primary" id="loginBtn">Masuk ke Keluarga Madi</button>
+      <p class="login-note">Setelah masuk, sesi tersimpan di browser ini saja, jadi kamu tidak perlu login ulang setiap membuka halaman. Pakai tombol Keluar kalau mau menghapus sesi dari perangkat ini.</p>
+    </form>
+  </section>
+</main>
+
+<!-- ================= CHAT ================= -->
+<div class="chat-wrap" id="chatView">
+  <header class="chat-header">
+    <div class="group-avatar" aria-hidden="true">KM</div>
+    <div class="titles">
+      <h2 id="groupTitle">Keluarga Madi</h2>
+      <div class="status-line"><span class="dot busy" id="statusDot"></span><span id="statusText">Menyambung…</span><span aria-hidden="true">·</span><span id="memberLine">maya, tia, mia, ria, madi</span></div>
+    </div>
+    <button type="button" class="btn-ghost" id="logoutBtn">Keluar</button>
+  </header>
+
+  <div class="banner" id="chatBanner" role="alert"></div>
+
+  <div class="messages" id="messageList">
+    <button type="button" class="load-older" id="loadOlderBtn">Muat pesan sebelumnya</button>
+    <div class="loading-history" id="historyLoading"><span class="spinner dark"></span>Memuat riwayat pesan…</div>
+    <div id="msgContainer"></div>
+  </div>
+
+  <div class="me-line"><span id="meLine">Masuk sebagai —</span><span>Grup privat · Tencent Cloud Chat</span></div>
+
+  <form class="composer" id="composerForm">
+    <textarea id="composerInput" rows="1" placeholder="Tulis pesan…" aria-label="Tulis pesan"></textarea>
+    <button type="submit" class="btn-send" id="sendBtn" aria-label="Kirim pesan" disabled>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
+    </button>
+  </form>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SDK_APP_ID = 20050801;
+  var GROUP_ID = "@TGS#1EMN6GS5CI";
+  var CONV_ID = "GROUP" + GROUP_ID;
+  var LS_USER = "berempat_userId";
+  var LS_SIG  = "berempat_userSig";
+
+  var NAMES = { madi:"Madi", maya:"Maya", tia:"Tia", mia:"Mia", ria:"Ria" };
+  var AVCLASS = { madi:"av-madi", maya:"av-maya", tia:"av-tia", mia:"av-mia", ria:"av-ria" };
+
+  var tim = null;
+  var me = "";
+  var ready = false;
+  var nextReqId = "";
+  var historyDone = false;
+  var loadingOlder = false;
+  var seenIds = {};
+  var lastDayKey = "";
+
+  var $ = function(id){ return document.getElementById(id); };
+  var loginView = $("loginView"), chatView = $("chatView");
+  var loginForm = $("loginForm"), loginBtn = $("loginBtn");
+  var userIdInput = $("userId"), userSigInput = $("userSig");
+  var loginError = $("loginError"), loginInfo = $("loginInfo");
+  var statusDot = $("statusDot"), statusText = $("statusText");
+  var banner = $("chatBanner");
+  var msgContainer = $("msgContainer"), messageList = $("messageList");
+  var historyLoading = $("historyLoading"), loadOlderBtn = $("loadOlderBtn");
+  var composerForm = $("composerForm"), composerInput = $("composerInput"), sendBtn = $("sendBtn");
+
+  function showError(el, msg){ el.textContent = msg; el.classList.add("show"); }
+  function hideError(el){ el.textContent = ""; el.classList.remove("show"); }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function linkify(escaped){
+    return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  }
+  function displayName(id, nick, nameCard){
+    if (nameCard) return nameCard;
+    if (nick) return nick;
+    if (NAMES[id]) return NAMES[id];
+    return id || "Pengguna";
+  }
+  function dayKey(ts){
+    var d = new Date(ts*1000);
+    return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+  }
+  function dayLabel(ts){
+    var d = new Date(ts*1000), now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    var that = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    if (that === today) return "Hari ini";
+    if (that === today - 86400000) return "Kemarin";
+    return d.toLocaleDateString("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+  }
+  function timeLabel(ts){
+    return new Date(ts*1000).toLocaleTimeString("id-ID", { hour:"2-digit", minute:"2-digit" });
+  }
+  function setStatus(state, text){
+    statusDot.className = "dot" + (state === "on" ? " on" : state === "busy" ? " busy" : "");
+    statusText.textContent = text;
+  }
+  function scrollToBottom(){
+    messageList.scrollTop = messageList.scrollHeight;
+  }
+  function nearBottom(){
+    return messageList.scrollHeight - messageList.scrollTop - messageList.clientHeight < 160;
+  }
+
+  /* ---------- render pesan ---------- */
+  function messageText(m){
+    if (m.type === "TIMTextElem") return (m.payload && m.payload.text) || "";
+    if (m.type === "TIMImageElem") return "[Foto]";
+    if (m.type === "TIMSoundElem") return "[Pesan suara]";
+    if (m.type === "TIMFileElem") return "[Berkas]";
+    if (m.type === "TIMVideoFileElem") return "[Video]";
+    if (m.type === "TIMCustomElem") return "[Pesan khusus]";
+    if (m.type === "TIMFaceElem") return "[Stiker]";
+    return "[Pesan]";
+  }
+  function isSystemMsg(m){
+    return m.type === "TIMGroupSystemNoticeElem" || m.type === "TIMGroupTipElem";
+  }
+  function systemText(m){
+    var p = m.payload || {};
+    if (m.type === "TIMGroupTipElem"){
+      var who = displayName(p.operatorID || "", "", "");
+      // operationType: 1 join, 2 quit, 3 kick, 6 member info
+      if (p.operationType === 1) return who + " bergabung ke grup";
+      if (p.operationType === 2) return "Ada anggota yang keluar dari grup";
+      if (p.operationType === 3) return "Ada anggota yang dikeluarkan dari grup";
+      return "Aktivitas grup";
+    }
+    return p.text || "Notifikasi grup";
+  }
+
+  function addDaySep(ts, prepend){
+    var key = dayKey(ts);
+    if (!prepend && key === lastDayKey) return;
+    var el = document.createElement("div");
+    el.className = "day-sep";
+    el.textContent = dayLabel(ts);
+    el.dataset.day = key;
+    if (prepend){
+      // sisipkan sebelum pesan pertama di hari itu / di awal container
+      msgContainer.insertBefore(el, msgContainer.firstChild);
+    } else {
+      msgContainer.appendChild(el);
+      lastDayKey = key;
+    }
+  }
+
+  function renderMessage(m, opts){
+    opts = opts || {};
+    if (!m || !m.ID || seenIds[m.ID]) return null;
+    seenIds[m.ID] = true;
+
+    if (isSystemMsg(m)){
+      var sys = document.createElement("div");
+      sys.className = "msg sys";
+      sys.innerHTML = '<div class="sys-text">' + esc(systemText(m)) + "</div>";
+      if (opts.prepend) msgContainer.insertBefore(sys, msgContainer.firstChild);
+      else msgContainer.appendChild(sys);
+      return sys;
+    }
+    // hanya tampilkan pesan grup ini
+    if (m.conversationID && m.conversationID !== CONV_ID) return null;
+
+    var own = m.from === me;
+    var name = own ? "Kamu" : displayName(m.from, m.nick, m.nameCard);
+    var avCls = AVCLASS[m.from] || "av-lain";
+    var initial = (displayName(m.from, m.nick, m.nameCard) || "?").charAt(0).toUpperCase();
+
+    var wrap = document.createElement("div");
+    wrap.className = "msg" + (own ? " own" : "") + (m.status === "fail" ? " failed" : "");
+    wrap.dataset.mid = m.ID;
+    var html = "";
+    if (!own) html += '<span class="avatar ' + avCls + '" aria-hidden="true">' + esc(initial) + "</span>";
+    html += '<div class="body">';
+    if (!own) html += '<p class="sender">' + esc(name) + "</p>";
+    html += '<div class="bubble">' + linkify(esc(messageText(m))) + "</div>";
+    html += '<div class="time">' + esc(timeLabel(m.time || Math.floor(Date.now()/1000))) + "</div>";
+    if (m.status === "fail") html += '<div class="fail-note">Gagal terkirim — cek koneksi lalu coba lagi.</div>';
+    html += "</div>";
+    wrap.innerHTML = html;
+
+    if (opts.prepend) msgContainer.insertBefore(wrap, msgContainer.firstChild);
+    else msgContainer.appendChild(wrap);
+    return wrap;
+  }
+
+  function removeEmptyState(){
+    var e = $("emptyState");
+    if (e) e.remove();
+  }
+  function showEmptyState(){
+    if ($("emptyState") || msgContainer.children.length > 0) return;
+    var d = document.createElement("div");
+    d.className = "empty-state"; d.id = "emptyState";
+    d.innerHTML = "<strong>Belum ada pesan</strong><p>Jadilah yang pertama menyapa di grup Keluarga Madi. Tulis pesan di bawah ini.</p>";
+    msgContainer.appendChild(d);
+  }
+
+  /* ---------- riwayat ---------- */
+  function loadHistory(older){
+    if (!tim || !ready) return Promise.resolve();
+    if (older && (historyDone || loadingOlder)) return Promise.resolve();
+    if (older) loadingOlder = true;
+    var params = { conversationID: CONV_ID, count: 20 };
+    if (older && nextReqId) params.nextReqMessageID = nextReqId;
+    return tim.getMessageList(params).then(function(res){
+      var data = res.data || {};
+      var list = data.messageList || [];
+      nextReqId = data.nextReqMessageID || "";
+      historyDone = !!data.isCompleted;
+
+      if (!older){
+        historyLoading.style.display = "none";
+        // urutan dari SDK: terbaru dulu → balik agar lama di atas
+        var sorted = list.slice().reverse();
+        var prevDay = "";
+        sorted.forEach(function(m){
+          var k = m.time ? dayKey(m.time) : "";
+          if (k && k !== prevDay){ addDaySep(m.time); prevDay = k; lastDayKey = k; }
+          renderMessage(m);
+        });
+        if (list.length === 0) showEmptyState();
+        scrollToBottom();
+        markRead();
+      } else {
+        var oldHeight = messageList.scrollHeight;
+        var oldTop = messageList.scrollTop;
+        // prepend per hari, dari yang paling lama
+        var sortedOld = list.slice().reverse();
+        // kelompokkan: render terbalik dengan prepend
+        for (var i = sortedOld.length - 1; i >= 0; i--){
+          renderMessage(sortedOld[i], { prepend:true });
+        }
+        // pemisah hari untuk batch lama
+        if (sortedOld.length){
+          var first = sortedOld[0];
+          // hindari duplikat pemisah dengan hari yang sudah ada tepat setelahnya
+          var sep = document.createElement("div");
+          sep.className = "day-sep"; sep.textContent = dayLabel(first.time); sep.dataset.day = dayKey(first.time);
+          msgContainer.insertBefore(sep, msgContainer.firstChild);
+          // bersihkan pemisah ganda berurutan dengan hari sama
+          var seps = msgContainer.querySelectorAll(".day-sep");
+          for (var j = 1; j < seps.length; j++){
+            if (seps[j].dataset.day && seps[j].dataset.day === seps[j-1].dataset.day) seps[j].remove();
+          }
+        }
+        messageList.scrollTop = oldTop + (messageList.scrollHeight - oldHeight);
+      }
+      loadOlderBtn.classList.toggle("show", !historyDone && msgContainer.children.length > 0);
+      loadingOlder = false;
+    }).catch(function(err){
+      loadingOlder = false;
+      if (!older){
+        historyLoading.style.display = "none";
+        showBanner("Riwayat pesan gagal dimuat. " + friendlyErr(err));
+      }
+    });
+  }
+
+  function applyGroupName(name){
+    if (!name) return;
+    var t = $("groupTitle");
+    if (t) t.textContent = name;
+    document.title = name;
+  }
+  function loadGroupInfo(){
+    if (!tim) return;
+    // nama grup live dari profil grup Tencent
+    tim.getGroupProfile({ groupID: GROUP_ID }).then(function(res){
+      var g = res && res.data && res.data.group;
+      if (g && g.name) applyGroupName(g.name);
+    }).catch(function(){
+      // fallback: nama dari profil percakapan
+      tim.getConversationProfile(CONV_ID).then(function(res){
+        var c = res && res.data && res.data.conversation;
+        var gp = c && (c.groupProfile || (c.conversationID ? null : null));
+        if (gp && gp.name) applyGroupName(gp.name);
+        else if (c && c.remark) applyGroupName(c.remark);
+      }).catch(function(){});
+    });
+    // daftar anggota live
+    tim.getGroupMemberList({ groupID: GROUP_ID, count: 30, offset: 0 }).then(function(res){
+      var list = (res && res.data && res.data.memberList) || [];
+      var ids = list.map(function(m){ return m.userID; }).filter(Boolean);
+      if (ids.length) $("memberLine").textContent = ids.join(", ");
+    }).catch(function(){});
+  }
+
+  function markRead(){
+    if (!tim || !ready) return;
+    tim.setMessageRead({ conversationID: CONV_ID }).catch(function(){});
+  }
+
+  function showBanner(msg){
+    banner.textContent = msg;
+    banner.classList.add("show");
+  }
+  function hideBanner(){ banner.textContent = ""; banner.classList.remove("show"); }
+
+  function friendlyErr(err){
+    if (!err) return "";
+    var code = err.code, msg = err.message || "";
+    if (code === 70001 || /userSig/i.test(msg)) return "UserSig tidak valid atau sudah kedaluwarsa. Minta UserSig baru lalu tempel lagi.";
+    if (code === 70003) return "UserID tidak ditemukan di aplikasi ini. Cek lagi ejaannya (madi / maya / tia / mia / ria).";
+    if (code === 70009) return "Kamu tidak punya izin untuk aksi ini.";
+    if (code === 6014 || /not ready/i.test(msg)) return "Koneksi belum siap. Tunggu sebentar lalu coba lagi.";
+    if (/network|Network|timeout/i.test(msg)) return "Masalah jaringan. Cek koneksi internet kamu.";
+    return msg ? "(" + msg + ")" : "";
+  }
+
+  /* ---------- login / logout ---------- */
+  function setLoginBusy(busy, label){
+    loginBtn.disabled = busy;
+    loginBtn.innerHTML = busy
+      ? '<span class="spinner"></span>' + esc(label || "Menyambung…")
+      : "Masuk ke Keluarga Madi";
+  }
+
+  function enterChat(userID){
+    me = userID;
+    loginView.style.display = "none";
+    chatView.classList.add("on");
+    $("meLine").textContent = "Masuk sebagai " + (NAMES[userID] || userID) + " (" + userID + ")";
+    setStatus("busy", "Menyambung…");
+    historyLoading.style.display = "flex";
+  }
+
+  function backToLogin(message){
+    me = ""; ready = false;
+    chatView.classList.remove("on");
+    loginView.style.display = "flex";
+    msgContainer.innerHTML = "";
+    seenIds = {}; lastDayKey = ""; nextReqId = ""; historyDone = false;
+    loadOlderBtn.classList.remove("show");
+    hideBanner();
+    if (message) showError(loginError, message);
+  }
+
+  function doLogin(userID, userSig, opts){
+    opts = opts || {};
+    if (typeof TIM === "undefined"){
+      showError(loginError, "SDK chat gagal dimuat. Cek koneksi internet kamu, lalu muat ulang halaman ini.");
+      return;
+    }
+    hideError(loginError); hideError(loginInfo);
+    setLoginBusy(true, opts.auto ? "Memulihkan sesi…" : "Menyambung…");
+
+    // buat ulang instance bila perlu
+    try {
+      if (tim){ tim.logout().catch(function(){}); tim = null; }
+    } catch(e){ tim = null; }
+
+    tim = TIM.create({ SDKAppID: SDK_APP_ID });
+    try { tim.setLogLevel(1); } catch(e){}
+
+    tim.on(TIM.EVENT.SDK_READY, function(){
+      ready = true;
+      setStatus("on", "Terhubung");
+      hideBanner();
+      setLoginBusy(false);
+      // simpan sesi hanya setelah login terbukti berhasil
+      try {
+        localStorage.setItem(LS_USER, userID);
+        localStorage.setItem(LS_SIG, userSig);
+      } catch(e){}
+      enterChat(userID);
+      loadGroupInfo();
+      // gabung grup (abaikan error bila sudah jadi anggota)
+      tim.joinGroup({ groupID: GROUP_ID, type: TIM.TYPES.GRP_PRIVATE }).catch(function(){});
+      loadHistory(false);
+    });
+
+    tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(event){
+      var list = (event && event.data) || [];
+      var stick = nearBottom();
+      var hasNew = false;
+      list.forEach(function(m){
+        if (m.conversationID && m.conversationID !== CONV_ID) return;
+        var k = m.time ? dayKey(m.time) : "";
+        if (k && k !== lastDayKey) addDaySep(m.time);
+        if (renderMessage(m)) hasNew = true;
+      });
+      if (hasNew){
+        removeEmptyState();
+        if (stick || list.some(function(m){ return m.from === me; })) scrollToBottom();
+        markRead();
+      }
+    });
+
+    tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event){
+      var list = (event && event.data) || [];
+      list.forEach(function(c){
+        if (c.conversationID === CONV_ID && c.groupProfile && c.groupProfile.name){
+          applyGroupName(c.groupProfile.name);
+        }
+      });
+    });
+
+    tim.on(TIM.EVENT.SDK_NOT_READY, function(){
+      ready = false;
+      setStatus("", "Terputus — menyambung ulang…");
+    });
+
+    tim.on(TIM.EVENT.KICKED_OUT, function(){
+      try { localStorage.removeItem(LS_SIG); } catch(e){}
+      if (tim){ tim.logout().catch(function(){}); }
+      backToLogin("Sesi kamu berakhir (akun masuk di perangkat lain atau UserSig dicabut). Silakan masuk lagi dengan UserSig terbaru.");
+    });
+
+    tim.on(TIM.EVENT.NET_STATE_CHANGE, function(event){
+      var state = event && event.data && event.data.state;
+      if (state === "connected") setStatus("on", "Terhubung");
+      else if (state === "connecting") setStatus("busy", "Menyambung…");
+      else if (state === "disconnected") setStatus("", "Terputus");
+    });
+
+    tim.login({ userID: userID, userSig: userSig }).then(function(){
+      // SDK_READY yang menyelesaikan transisi layar
+    }).catch(function(err){
+      setLoginBusy(false);
+      if (chatView.classList.contains("on")){
+        showBanner("Gagal menyambung. " + friendlyErr(err));
+      } else {
+        if (opts.auto){
+          // sesi tersimpan gagal → bersihkan sig, minta tempel ulang
+          try { localStorage.removeItem(LS_SIG); } catch(e){}
+          userSigInput.value = "";
+          showError(loginError, "Sesi tersimpan tidak bisa dipakai lagi. " + friendlyErr(err) + " Tempel UserSig terbaru untuk masuk.");
+        } else {
+          showError(loginError, "Gagal masuk. " + friendlyErr(err));
+        }
+      }
+    });
+  }
+
+  loginForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var uid = userIdInput.value.trim().toLowerCase();
+    var sig = userSigInput.value.trim();
+    if (!uid){ showError(loginError, "Isi dulu UserID kamu."); userIdInput.focus(); return; }
+    if (!sig){ showError(loginError, "Tempel dulu UserSig kamu."); userSigInput.focus(); return; }
+    userIdInput.value = uid;
+    doLogin(uid, sig, { auto:false });
+  });
+
+  document.querySelectorAll(".quick-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".quick-btn").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btn.setAttribute("aria-pressed","true");
+      userIdInput.value = btn.getAttribute("data-userid");
+      userSigInput.focus();
+    });
+  });
+  userIdInput.addEventListener("input", function(){
+    var v = userIdInput.value.trim().toLowerCase();
+    document.querySelectorAll(".quick-btn").forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-userid") === v ? "true" : "false");
+    });
+  });
+
+  var sigVisible = false;
+  userSigInput.style.webkitTextSecurity = "disc";
+  $("sigToggle").addEventListener("click", function(){
+    sigVisible = !sigVisible;
+    userSigInput.style.webkitTextSecurity = sigVisible ? "none" : "disc";
+    this.textContent = sigVisible ? "Sembunyikan" : "Lihat";
+  });
+
+  $("logoutBtn").addEventListener("click", function(){
+    try { localStorage.removeItem(LS_USER); localStorage.removeItem(LS_SIG); } catch(e){}
+    var t = tim; tim = null;
+    if (t) t.logout().catch(function(){});
+    userSigInput.value = "";
+    backToLogin("");
+    hideError(loginError);
+    showError(loginInfo, "Kamu sudah keluar. Sesi di browser ini sudah dihapus.");
+    loginInfo.classList.add("show");
+  });
+
+  /* ---------- kirim pesan ---------- */
+  function autoGrow(){
+    composerInput.style.height = "auto";
+    composerInput.style.height = Math.min(composerInput.scrollHeight, 130) + "px";
+    sendBtn.disabled = composerInput.value.trim().length === 0;
+  }
+  composerInput.addEventListener("input", autoGrow);
+  composerInput.addEventListener("keydown", function(e){
+    if (e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      if (composerInput.value.trim()) composerForm.requestSubmit();
+    }
+  });
+
+  composerForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var text = composerInput.value.trim();
+    if (!text || !tim) return;
+    if (!ready){ showBanner("Belum terhubung. Tunggu sampai status Terhubung, lalu kirim lagi."); return; }
+    hideBanner();
+    var message = tim.createTextMessage({
+      to: GROUP_ID,
+      conversationType: TIM.TYPES.CONV_GROUP,
+      payload: { text: text }
+    });
+    composerInput.value = "";
+    autoGrow();
+    var k = dayKey(Math.floor(Date.now()/1000));
+    if (k !== lastDayKey) addDaySep(Math.floor(Date.now()/1000));
+    var el = renderMessage(message);
+    removeEmptyState();
+    scrollToBottom();
+    tim.sendMessage(message).then(function(res){
+      // ganti elemen lokal dengan versi server (ID sama, status sukses)
+      seenIds[message.ID] = true;
+      if (el) el.classList.remove("failed");
+    }).catch(function(err){
+      if (el){
+        el.classList.add("failed");
+        var note = document.createElement("div");
+        note.className = "fail-note";
+        note.textContent = "Gagal terkirim. " + friendlyErr(err);
+        el.querySelector(".body").appendChild(note);
+      }
+      showBanner("Pesan gagal terkirim. " + friendlyErr(err));
+    });
+    composerInput.focus();
+  });
+
+  loadOlderBtn.addEventListener("click", function(){ loadHistory(true); });
+  messageList.addEventListener("scroll", function(){
+    if (messageList.scrollTop < 40 && !historyDone && !loadingOlder && ready){
+      // biarkan tombol yang memicu, demi kontrol pengguna — tidak auto-load
+    }
+  });
+  document.addEventListener("visibilitychange", function(){
+    if (!document.hidden) markRead();
+  });
+
+  /* ---------- mulai: pulihkan sesi ---------- */
+  var savedUser = "", savedSig = "";
+  try {
+    savedUser = localStorage.getItem(LS_USER) || "";
+    savedSig = localStorage.getItem(LS_SIG) || "";
+  } catch(e){}
+  if (savedUser){
+    userIdInput.value = savedUser;
+    document.querySelectorAll(".quick-btn").forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-userid") === savedUser ? "true" : "false");
+    });
+  }
+  if (savedUser && savedSig){
+    userSigInput.value = savedSig;
+    showError(loginInfo, "Sesi tersimpan ditemukan — menyambung otomatis sebagai " + (NAMES[savedUser] || savedUser) + "…");
+    loginInfo.classList.add("show");
+    doLogin(savedUser, savedSig, { auto:true });
+  }
+})();
+</script>
+</body>
+</html>
